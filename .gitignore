@@ -1,4 +1,11 @@
+# Technically below pattern should ignore all "node_modules" including sub directories
+node_modules/
+
+# Making sure specified directories' node_modules ignored
 node_modules
 ./tutorials/node_modules
 ./tutorials/tutorial1/node_modules
+./tutorials/tuto-chat-socket-io/node_modules
+
+# In workload with working visual studio
 .vs
