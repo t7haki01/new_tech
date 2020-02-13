@@ -9,3 +9,13 @@ node_modules
 
 # In workload with working visual studio
 .vs
+
+# Deprecated
+./deprecated
+deprecated/
+deprecated
+
+#Env
+
+.env
+./mini-mini-pikku-pikku/.env
