@@ -3,27 +3,22 @@
   <div id="main" class="">
     <table id="gameTb" class="table table-hover">
       <tbody>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
+        <tr *ngFor="let row of status">
+          <td *ngFor="let cell of row" (click)="cellClicked(cell)">
+            <ng-container *ngIf="cell == 11 ">O Clicked!</ng-container>
+            <ng-container *ngIf="cell == 12 ">X Clicked!</ng-container>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <ul id="chatDisplay"></ul>
+  <ul id="chatDisplay">
+    <li *ngFor="let message of messages">
+      {{message}}
+    </li>
+  </ul>
   <div id="inputBox">
-    <input id="chatInput" autocomplete="off" /><button id="chatBtn">Send</button>
+    <input (keydown.enter)="sendMessage()" id="chatInput" autocomplete="off" /><button id="chatBtn" (click)="sendMessage()">Send</button>
   </div>
 </body>
 

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from '../chat.service';
+import { TictactoeService } from '../tictactoe.service';
 
 @Component({
   selector: 'app-tictactoe',
@@ -6,56 +8,50 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tictactoe.component.css']
 })
 export class TictactoeComponent implements OnInit {
-
-  constructor() {
-  }
+  message: string;
+  private messages: Array<string> = [];
+  private status = [[1,2,3],[4,5,6],[7,8,9]];
+  private pick;
+  constructor(private chatService: ChatService,
+              private gameService: TictactoeService){}
 
   ngOnInit() {
-    (<HTMLElement>document.getElementById('chatBtn')).addEventListener('click', this.displayMsg);
-    (<HTMLElement>document.getElementById('chatInput')).addEventListener('keypress', this.inputEnter);
+    this.chatService
+      .getMessage()
+      .subscribe((m: string) => {
+        this.messages.push(m);
+      });
 
-    var table = (<HTMLTableElement>document.getElementById("gameTb"));
-    if (table != null) {
-      for (var i = 0; i < table.rows.length; i++) {
-        for (var j = 0; j < table.rows[i].cells.length; j++)
-          table.rows[i].cells[j].onclick = function () {
-            tableText(this);
-          };
+    this.gameService
+      .getStatus()
+      .subscribe((status) => {
+        this.status = status;
+      });
+    this.gameService.setPick(11);
+    this.gameService
+      .getPick()
+      .subscribe((pick) => {
+        console.log(pick);
+        this.pick = pick;
+      });
+  }
+
+  cellClicked(cellNumber) {
+    console.log(this.pick);
+    for (let i = 0; i < this.status.length; i++) {
+      for (let j = 0; j < this.status[i].length; j++) {
+        if (this.status[i][j] == cellNumber) {
+          this.status[i][j] = this.pick;
+          this.gameService.updateStatus(this.status);
+        }
       }
     }
-
-    function tableText(tableCell) {
-      //alert(tableCell.innerHTML);
-      let mark = document.createTextNode("X");
-      (<HTMLTableElement>tableCell).appendChild(mark);
-    }
-
   }
-
-  private inputEnter(e): void {
-    if (e.keyCode === 13) {
-      let chatInput: HTMLInputElement = (<HTMLInputElement>document.getElementById('chatInput'));
-      let chatDisplay: HTMLElement = (<HTMLElement>document.getElementById('chatDisplay'));
-
-      let msg = document.createElement('li');
-      let msgText = document.createTextNode(chatInput.value);
-      msg.appendChild(msgText);
-      chatDisplay.append(msg);
-
-      chatInput.value = "";
-    }
-  }
-
-  private displayMsg(): void {
+  sendMessage(): void {
     let chatInput: HTMLInputElement = (<HTMLInputElement>document.getElementById('chatInput'));
-    let chatDisplay: HTMLElement = (<HTMLElement>document.getElementById('chatDisplay'));
-
-    let msg = document.createElement('li');
-    let msgText = document.createTextNode(chatInput.value);
-    msg.appendChild(msgText);
-    chatDisplay.append(msg);
-
+    this.message = chatInput.value;
     chatInput.value = "";
+    this.chatService.sendMessage(this.message);
+    this.message = '';
   }
-
 }
