@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./src/css/tictactoe.css">
+    <script src="./src/js/tictactoe.js"></script>
+    <title>Mini Mini, Pikku Pikku</title>
+</head>
+<body>
+    <div id="main" class="">
+        <table id="gameTb" class="table table-hover">
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ul id="chatDisplay">
+        <li>
+        </li>
+    </ul>
+    <div id="inputBox">
+        <input onkeydown="enterPressed(event)" id="chatInput" autocomplete="off" /><button onclick="sendMessage()" id="chatBtn">Send</button>
+    </div>
+</body>
+
+</html>

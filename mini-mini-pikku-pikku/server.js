@@ -16,10 +16,10 @@ app.get('*', (req, res) => {
 let socketIO = require('socket.io');
 let io = socketIO(server);
 
-let picked = [];
-
-
-//const socket = require('socket.io')(server);
+let game = { players: [],
+  picked: [], justClicked: null};
+const Player = require('./Player.js');
+let idNum = 1;
 io.on("connection", (socket) => {
   console.log("user connected");
 
@@ -30,28 +30,85 @@ io.on("connection", (socket) => {
   socket.on('tictactoe', function (status) {
     io.emit('tictactoe', status)
   });
+
   socket.on('pick', function (pick) {
-    console.log(picked);
-    console.log(socket.client)
-    if (picked.length < 2) {
-      if (picked.length == 0) {
-        console.log("length : 0");
-        picked.push({ id: socket, value: pick });
-        io.emit('pick', picked[0].value);
+    if (game.picked.length < 2) {
+      if (game.picked.length == 0) {
+        let player = new Player();
+        player.setId(1);
+        player.setValue(0);
+        player.setSocket(socket.id);
+        player.setTurn(true);
+        game.picked.push(player);
+        io.emit('pick', player);
+        current = player.getSocket();
       }
-      else if (picked.length == 1) {
-        console.log("length : 1");
-        picked.push({ id: socket, value: 12 });
-        io.emit('pick', picked[1].value);
+      else if (game.picked.length == 1) {
+        let player = new Player();
+        player.setId(2);
+        player.setValue(-1);
+        player.setSocket(socket.id);
+        player.setTurn(false);
+        game.picked.push(player);
+        io.emit('pick', player);
       }
     }
     else {
-      picked.forEach(function (p) {
-        if (p.id == socket) {
-          io.emit('pick', p.value);
+      game.picked.forEach(function (p) {
+        if (p.getSocket() == socket.id) {
+          io.emit('pick', p);
         }
-      })
+      });
     }
+  });
+
+  socket.on('event1', (data) => {
+    console.log(data.msg);
+  });
+
+  socket.on('init', () =>{
+    let newPlayer = new Player();
+    newPlayer.setSocket(socket.id);
+    let value = null;
+    if(idNum%2 == 0){
+      value = 0;
+    }
+    else{
+      value = -1
+    }
+    newPlayer.setValue(value);
+    idNum++;
+    game.players.push(newPlayer);
+  });
+
+  socket.emit('event2', {
+    msg: 'Server to client, do you read me? Over.'
+  });
+
+  socket.emit('inited', game);
+
+  socket.on('event3', (data) => {
+    console.log(data.msg);
+    socket.emit('event4', {
+      msg: 'Loud and clear :)'
+    });
+  });
+
+  socket.on('afterInited', (data)=>{
+    console.log(data);
+    socket.emit('serverResponse',game);
+  });
+
+  socket.on('clicked', (data) =>{
+    game = data;
+    socket.emit('clicked_update', game);
+  });
+  socket.on('gameUpdated', (data)=>{
+    game = data;
+    socket.emit('updateGame', game);
+  });
+  socket.on('getUpdate', ()=>{
+    socket.emit('pullUpdate', game);
   });
 
 });
@@ -60,15 +117,3 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log("Server running on port:", port);
 });
-
-
-class Player {
-  id;
-  constructor() { }
-  setId(id) {
-    this.id = id;
-  }
-  getId() {
-    return this.id;
-  }
-}

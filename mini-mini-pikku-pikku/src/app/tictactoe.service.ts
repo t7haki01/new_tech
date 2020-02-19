@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class TictactoeService {
   public socket;
+  public result = { win: false, lose: false, draw: false, end: false }
 
   constructor() {
     this.socket = io('http://localhost:8888');
@@ -34,5 +35,41 @@ export class TictactoeService {
         observer.next(pick);
       })
     })
+  }
+
+  public getUpdate(game) {
+    this.socket.emit('click', game);
+  }
+
+  public setUpdate = () => {
+    return Observable.create( (observer) => {
+      this.socket.on('update', (game) => {
+        observer.next(game);
+      })
+    })
+  }
+
+  public gameResult(status: Array<Array<number>>) {
+    status.forEach(function (rows) {
+      let horizontal = [];
+      rows.forEach(function (row) {
+        if (horizontal.length == 0) {
+          horizontal.push(row);
+          this.result.end = false;
+        }
+        else {
+          if (horizontal.length == 1) {
+            if (horizontal[0] == row) {
+              horizontal.push(row);
+              this.result.end = false;
+            }
+            else {
+              this.result.end = false;
+            }
+          }
+        }
+
+      });
+    });
   }
 }

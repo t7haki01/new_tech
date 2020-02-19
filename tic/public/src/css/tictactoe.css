@@ -1,0 +1,81 @@
+@import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font: 13px Helvetica, Arial;
+}
+
+#inputBox {
+    background: #000;
+    padding: 3px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+    #inputBox input {
+        border: 0;
+        padding: 10px;
+        width: 90%;
+        margin-right: .5%;
+    }
+
+    #inputBox button {
+        width: 9%;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: 10px;
+    }
+
+#chatDisplay {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    float: right;
+    border: solid 1px black;
+    width: 25em;
+    height: 50em;
+}
+
+    #chatDisplay li {
+        padding: 5px 10px;
+    }
+
+        #chatDisplay li:nth-child(odd) {
+            background: #eee;
+        }
+
+/*Only background of hovering current cell*/
+.table-hover > tbody > tr > td:hover, .table-hover > tbody > tr > td:hover {
+    background-color: lightgray !important;
+}
+
+/*reset the default bootstrap style on tr:hover*/
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background-color: white;
+}
+
+table.table tbody tr td,
+table.table thead tr th,
+table.table thead {
+    /*border-left: 1px solid black;
+  border-right: 1px solid black;*/
+    border: 1px solid black;
+}
+
+.table tbody tr td {
+    width: 10em;
+    height: 14em;
+}
+
+#main {
+    width: 70%;
+    float: left;
+    margin-top: 10em;
+    margin-left: 2em;
+}

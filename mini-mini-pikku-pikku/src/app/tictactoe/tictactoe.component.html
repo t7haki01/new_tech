@@ -5,8 +5,8 @@
       <tbody>
         <tr *ngFor="let row of status">
           <td *ngFor="let cell of row" (click)="cellClicked(cell)">
-            <ng-container *ngIf="cell == 11 ">O Clicked!</ng-container>
-            <ng-container *ngIf="cell == 12 ">X Clicked!</ng-container>
+            <ng-container *ngIf="cell == 0 ">O Clicked!</ng-container>
+            <ng-container *ngIf="cell == -1 ">X Clicked!</ng-container>
           </td>
         </tr>
       </tbody>
