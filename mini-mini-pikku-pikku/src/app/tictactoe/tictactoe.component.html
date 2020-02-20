@@ -1,24 +1,39 @@
 
 <body>
-  <div id="main" class="">
-    <table id="gameTb" class="table table-hover">
-      <tbody>
-        <tr *ngFor="let row of status">
-          <td *ngFor="let cell of row" (click)="cellClicked(cell)">
-            <ng-container *ngIf="cell == 0 ">O Clicked!</ng-container>
-            <ng-container *ngIf="cell == -1 ">X Clicked!</ng-container>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="col-8">
+      <div id="main" class="">
+        <table id="gameTb" class="table table-hover">
+          <tbody>
+            <tr *ngFor="let row of status">
+              <td class="justify-content-center" *ngFor="let cell of row" (click)="cellClicked(cell)">
+                <mat-icon *ngIf="cell == 0 " class="icon-o">
+                  trip_origin
+                </mat-icon>
+                <mat-icon *ngIf="cell == -1 " class="icon-x">
+                  close
+                </mat-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col">
+      <ul id="chatDisplay">
+        <li *ngFor="let message of messages">
+          {{message}}
+        </li>
+      </ul>
+    </div>
   </div>
-  <ul id="chatDisplay">
-    <li *ngFor="let message of messages">
-      {{message}}
-    </li>
-  </ul>
-  <div id="inputBox">
-    <input (keydown.enter)="sendMessage()" id="chatInput" autocomplete="off" /><button id="chatBtn" (click)="sendMessage()">Send</button>
-  </div>
+    <div class="row padding-adjust-input" id="inputBox">
+      <div class="col">
+        <input (keydown.enter)="sendMessage()" id="chatInput" autocomplete="off" />
+      </div>
+      <div class="col-1 padding-adjust-send-btn">
+        <button id="chatBtn" (click)="sendMessage()">Send</button>
+      </div>
+    </div>
 </body>
 

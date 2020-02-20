@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../chat.service';
 import { TictactoeService } from '../tictactoe.service';
 import * as io from 'socket.io-client';
-import { debug } from 'util';
 
 @Component({
   selector: 'app-tictactoe',
@@ -10,19 +9,19 @@ import { debug } from 'util';
   styleUrls: ['./tictactoe.component.css']
 })
 export class TictactoeComponent implements OnInit {
-  message: string;
+  private message: string;
   private messages: Array<string> = [];
   private status = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
-  private pick;
+
   private game;
   private player;
+  private isEnd: boolean = false;
+  private winner;
 
-  txt: string;
-  msg: Array<any>;
-  socket: SocketIOClient.Socket;
+  private socket: SocketIOClient.Socket;
 
   constructor(private chatService: ChatService,
-              private gameService: TictactoeService, )
+    private gameService: TictactoeService,)
   {
     this.socket = io('http://localhost:8888').connect();
   }
@@ -40,31 +39,6 @@ export class TictactoeComponent implements OnInit {
       .subscribe((status) => {
         this.status = status;
       });
-    //this.gameService.setPick(this.pick);
-    //this.gameService
-    //  .getPick()
-    //  .subscribe((pick) => {
-    //    this.pick = pick;
-    //  });
-
-    this.msg = new Array();
-    //this.socket.on('message-received', (msg: any) => {
-    //  this.msg.push(msg);
-    //  console.log(msg);
-    //  console.log(this.msg);
-    //});
-    //this.socket.emit('event1', {
-    //  msg: 'Client to server, can you hear me server?'
-    //});
-    //this.socket.on('event2', (data: any) => {
-    //  console.log(data.msg);
-    //  this.socket.emit('event3', {
-    //    msg: 'Yes, its working for me!!'
-    //  });
-    //});
-    //this.socket.on('event4', (data: any) => {
-    //  console.log(data.msg);
-    //});
 
     this.game = new Array();
     this.socket.emit('init');
@@ -84,7 +58,9 @@ export class TictactoeComponent implements OnInit {
   }
 
   cellClicked(cellNumber) {
-    console.log(this.game);
+    if (this.isEnd) {
+      return;
+    }
     let isMyTurn = false;
     for (let j = 0; j < this.game.players.length; j++) {
       if (this.game.players[j].socket == this.player.socket) {
@@ -98,26 +74,44 @@ export class TictactoeComponent implements OnInit {
       }
     }
     if (isMyTurn) {
-      this.setClicked(this.player);
-      this.game.justClicked = this.player;
-      this.socket.emit('clicked', this.game);
-      this.socket.on('clicked_update', (data: any) => {
-        this.game = data;
-        this.socket.emit('gameUpdated', this.game);
-      });
-      console.log("It was my turn!");
+
       for (let i = 0; i < this.status.length; i++) {
         for (let j = 0; j < this.status[i].length; j++) {
           if (this.status[i][j] == cellNumber) {
-            //this.gameService.setPick(this.pick);
+            if (this.status[i][j] == 0 || this.status[i][j] == -1) {
+              console.log("Already clicked one");
+              return;
+            }
+
+            this.setClicked(this.player);
+            this.game.justClicked = this.player;
+            this.socket.emit('clicked', this.game);
+            this.socket.on('clicked_update', (data: any) => {
+              this.game = data;
+              this.socket.emit('gameUpdated', this.game);
+            });
+
             this.status[i][j] = this.player.value;
             this.gameService.updateStatus(this.status);
+
+            if (this.isDraw()) {
+              console.log("Game Draw!");
+              return;
+            }
+
+            let result = this.checkGameStatus();
+            if (result == this.player.value) {
+              this.isEnd = true;
+              this.winner = this.player;
+              console.log("Game End");
+            }
           }
         }
       }
+
+
     }
     else {
-      console.log("Not my turn");
       this.socket.emit('getUpdate');
       this.socket.on('pullUpdate', (data: any) => {
         this.game = data;
@@ -159,5 +153,104 @@ export class TictactoeComponent implements OnInit {
     chatInput.value = "";
     this.chatService.sendMessage(this.message);
     this.message = '';
+  }
+
+  checkGameStatus(): number {
+    let vertical1 = [];
+    let vertical2 = [];
+    let vertical3 = [];
+    let diagonal1 = [];
+    let diagonal2 = [];
+
+    let result = 1;
+    //Must be smarter solution for it, but currently used manual loop check!
+    for (let i = 0; i < this.status.length; i++) {
+      let horizontal = [];
+      for (let j = 0; j < this.status[i].length; j++) {
+
+        if (j == 0) {
+          vertical1.push(this.status[i][j]);
+          horizontal.length = 0;
+          horizontal.push(this.status[i][j]);
+          if (i == 0) {
+            diagonal1.push(this.status[i][j]);
+          }
+          else if (i == 2) {
+            diagonal2.push(this.status[i][j]);
+          }
+        }
+
+        else if (j == 1) {
+          vertical2.push(this.status[i][j]);
+          horizontal.push(this.status[i][j]);
+          if (i == 1) {
+            diagonal1.push(this.status[i][j]);
+            diagonal2.push(this.status[i][j]);
+          }
+        }
+
+        else {
+          vertical3.push(this.status[i][j]);
+          horizontal.push(this.status[i][j]);
+          if (i == 2) {
+            diagonal1.push(this.status[i][j]);
+          }
+          else if (i == 0) {
+            diagonal2.push(this.status[i][j]);
+          }
+
+          if (horizontal.length == 3 && horizontal[0] == horizontal[1] && horizontal[0] == horizontal[2]) {
+            result = horizontal[0];
+          }
+          else if (vertical1.length == 3 && vertical1[0] == vertical1[1] && vertical1[0] == vertical1[2]) {
+            result = vertical1[0];
+          }
+          else if (vertical2.length == 3 && vertical2[0] == vertical2[1] && vertical2[0] == vertical2[2]) {
+            result = vertical2[0];
+          }
+          else if (vertical3.length == 3 && vertical3[0] == vertical3[1] && vertical3[0] == vertical3[2]) {
+            result = vertical3[0];
+          }
+          else if (diagonal1.length == 3 && diagonal1[0] == diagonal1[1] && diagonal1[0] == diagonal1[2]) {
+            result = diagonal1[0];
+          }
+          else if (diagonal2.length == 3 && diagonal2[0] == diagonal2[1] && diagonal2[0] == diagonal2[2]) {
+            result = diagonal2[0];
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  isDraw(): boolean {
+    let isDraw = false;
+    let cells = [];
+    this.status.forEach(function (rows) {
+      rows.forEach(function (row) {
+        let clicked = false;
+        let clicked1 = row == -1 ? true : false;
+        let clicked2 = row == 0 ? true : false;
+        if (clicked1 || clicked2) {
+          clicked = true;
+        }
+        cells.push(clicked);
+      })
+    })
+
+    if (cells.includes(false)) {
+      this.isEnd = false;
+    }
+    else {
+      this.isEnd = true;
+    }
+
+    if (this.isEnd) {
+      if (!this.winner) {
+        isDraw = true;
+      }
+    }
+
+    return isDraw;
   }
 }

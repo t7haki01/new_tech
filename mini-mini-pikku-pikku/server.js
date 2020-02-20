@@ -8,9 +8,13 @@ let server = http.Server(app);
 app.set('port', port);
 
 app.use(express.static(path.join(__dirname, 'dist/mini-mini-pikku-pikku')));
+app.use(express.static(path.join(__dirname, 'amp')));
 
-app.get('*', (req, res) => {
+app.get('/app/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/mini-mini-pikku-pikku/index.html'))
+});
+app.get('/amp', (req, res) => {
+  res.sendFile(path.join(__dirname, 'amp/index.amp.html'))
 });
 
 let socketIO = require('socket.io');

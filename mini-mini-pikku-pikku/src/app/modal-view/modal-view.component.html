@@ -1,0 +1,24 @@
+<h1 *ngIf="!nameNotGiven" mat-dialog-title>Welcome, {{ data.nickName }}</h1>
+<h1 *ngIf="nameNotGiven" mat-dialog-title>Name is not given!</h1>
+<div mat-dialog-content>
+  <p *ngIf="nameNotGiven">So, we decided to call you as {{ data.nickName }}</p>
+  <p *ngIf="nameNotGiven">But still want to make sure. So are you sure we can call you as {{ data.nickName }}, <br />{{ Daenerys }}?</p>
+  <p *ngIf="!nameNotGiven">Choose what to do</p>
+
+  <div *ngIf="!nameNotGiven">
+    <mat-label>action A</mat-label>
+  </div>
+
+</div>
+<div mat-dialog-actions>
+  <div class="row text-center">
+    <div class="col">
+      <button *ngIf="nameNotGiven" mat-button (click)="callMeWhatEver()" cdkFocusInitial>Yes</button>
+    </div>
+    <div class="col">
+      <button mat-button (click)="onClose()">Close</button>
+    </div>
+  </div>
+
+
+</div>

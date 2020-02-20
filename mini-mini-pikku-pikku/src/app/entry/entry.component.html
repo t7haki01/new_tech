@@ -1,0 +1,22 @@
+
+<div>
+  <div class="row">
+    <div [@greet]="state" class="col text-center">
+      <p>{{ greeting }}</p>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col">
+      <mat-form-field>
+        <mat-label>How can we call you?</mat-label>
+        <input matInput [(ngModel)]="nickName">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col">
+      <button mat-raised-button (click)="openModalView()">Choose</button>
+    </div>
+  </div>
+</div>
+
