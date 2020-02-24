@@ -2,9 +2,11 @@ const Game = require('./Game.js');
 
 
 module.exports = class Host {
-  constructor() {
+  constructor(
+    games = []
+  ) {
+
   }
-  games = [];
   get games() {
     return this.games;
   }

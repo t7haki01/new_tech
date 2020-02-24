@@ -1,71 +1,77 @@
 module.exports = class Game{
     constructor(){
+        this.playerA;
+        this.playerB;    
+        this.isEnd ;
+        this.winner;
+        this.loser;
+        this.status ;
+        this.players ;
+        this.picked ;
+        this.justClicked;
     }
 
-    playerA = null;
-    get playerA() {
+
+    getPlayerA() {
         return this.playerA;
     }
-    set playerA(value) {
+    setPlayerA(value) {
         this.playerA = value;
     }
-    playerB = null;
-    get playerB() {
+
+    getPlayerB() {
         return this.playerB;
     }
-    set playerB(value) {
+    setPlayerB(value) {
         this.playerB = value;
     }
-    
-    isEnd = false;
-    get isEnd() {
+
+    getIsEnd() {
         return this.isEnd;
     }
-    set isEnd(value) {
+    setIsEnd(value) {
         this.isEnd = value;
     }
-    winner = null;
-    get winner() {
+
+    getWinner() {
         return this.winner;
     }
-    set winner(value) {
+    setWinner(value) {
         this.winner = value;
     }
-    loser = null;
-    get loser() {
+
+    getLoser() {
         return this.loser;
     }
-    set loser(value) {
+    setLoser(value) {
         this.loser = value;
     }
-    status = '';
-    get status() {
+
+    getStatus() {
         return this.status;
     }
-    set status(value) {
+    setStatus(value) {
         this.status = value;
     }
-    players = [];
-    get players() {
+
+    getPlayers() {
         return this.players;
     }
-    set players(value) {
+    setPlayers(value) {
         this.players = value;
     }
 
-    picked = [];
-    get picked() {
+    getPicked() {
         return this.picked;
     }
-    set picked(value) {
+    setPicked(value) {
         this.picked = value;
     }
 
-    justClicked = null;
-    get justClicked() {
+    getJustClicked() {
         return this.justClicked;
     }
-    set justClicked(value) {
+    setJustClicked(value) {
         this.justClicked = value;
     }
 
