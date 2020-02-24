@@ -32,7 +32,7 @@ export class TictactoeComponent implements OnInit {
     this.chatService
       .getMessage()
       .subscribe((m: string) => {
-        this.messages.push({ name:this.player.nickName, msg:m });
+        this.messages.push({ name:this.multiService.player.nickName, msg:m });
       });
 
     //Handing game states
@@ -40,6 +40,9 @@ export class TictactoeComponent implements OnInit {
       .getStatus()
       .subscribe((status) => {
         this.status = status;
+        if (this.winLose()) {
+          return;
+        }
       });
 
     //Init Player & Game
@@ -58,7 +61,7 @@ export class TictactoeComponent implements OnInit {
       .subscribe((data: any) => {
         this.game = data;
         this.updatePlayer(data);
-        this.resultAction(data);
+        this.playAgain(data);
       });
   }
 
@@ -110,26 +113,7 @@ export class TictactoeComponent implements OnInit {
       return;
     }
 
-    //'check result of game'
-    let result = this.checkGameStatus()
-    //'if result 1 then nobody matches yet'
-    if (result == this.player.value) {
-      //"you win so some actiion"
-      this.resultAct(true);
-      return;
-    }
-    else if (result == 1) {
-      //continue
-      //case of draw
-    }
-    else {
-      //"you lose so some action"
-      this.resultAct(false);
-      return;
-    }
-
     //"from here checked whole process"
-    //"TODO - change value/turn"
 
     for (let i = 0; i < this.status.length; i++) {
       for (let j = 0; j < this.status[i].length; j++) {
@@ -143,41 +127,55 @@ export class TictactoeComponent implements OnInit {
           this.status[i][j] = this.player.value;
           this.gameService.updateStatus(this.status);
           this.setClicked();
-
-          //'After Clicking check result'
-          let result = this.checkGameStatus();
-          if (result == this.player.value) {
-            this.isEnd = true;
-            this.setResult(true);
-            this.gameService.setUpdateGame(this.game);
-            this.resultAct(true);
-            console.log("Game End, you win!");
-          }
-          else if (result == 1) {
-            //"continue"
-          }
-          else {
-            this.isEnd = true;
-            this.setResult(false);
-            this.gameService.setUpdateGame(this.game);
-            this.resultAct(false);
-            console.log("Game End, you lose!");
-          }
-
-
-          if (this.isDraw()) {
-            console.log("Game Draw!");
-            //'Might some action for draw'
-            if (confirm("Draw!, Do you want to play again?"))
-              console.log("lets play one more!")
-            else
-              console.log("game end")
-
-            return;
-          }
         }
       }
     }
+
+
+    //'After Clicking check result
+    if (this.winLose()) {
+      return;
+    }
+
+    if (this.isDraw()) {
+      console.log("Game Draw!");
+      //'Might some action for draw'
+      if (confirm("Draw!, Do you want to play again?")) {
+        console.log("lets play one more!");
+        this.player.playAgain = true;
+        this.playerUpdate();
+      }
+      else {
+        this.player.playAgain = false;
+        this.playerUpdate();
+      }
+      return;
+    }
+  }
+
+  winLose() {
+    let cameResult = false;
+    let result = this.checkGameStatus();
+    if (result == this.player.value) {
+      this.isEnd = true;
+      this.setResult(true);
+      this.gameService.setUpdateGame(this.game);
+      this.resultAct(true);
+      console.log("Game End, you win!");
+      cameResult = true;
+    }
+    else if (result == 1) {
+      //"continue"
+    }
+    else {
+      this.isEnd = true;
+      this.setResult(false);
+      this.gameService.setUpdateGame(this.game);
+      this.resultAct(false);
+      console.log("Game End, you lose!");
+      cameResult = true;
+    }
+    return cameResult;
   }
 
   setClicked() {
@@ -214,28 +212,30 @@ export class TictactoeComponent implements OnInit {
    this.playerUpdate();
   }
 
-  resultAction(data: any) {
+  playAgain(data: any) {
     let playerA = data.players[0];
     let playerB = data.players[1];
     if (playerA.playAgain == null || playerB.playAgain == null) {
       return;
     }
-
     if (playerA.playAgain && playerB.playAgain) {
-      playerA.win = false;
-      playerB.win = false;
-      playerA.lose = false;
-      playerB.lose = false;
-      this.status = this.default;
-      this.gameService.updateStatus(this.status);
-      this.playerUpdate();
 
-      if (playerA.playAgain) {
-        //Continue play again
+      if (this.player.playAgain) {
+        this.player.win = false;
+        this.player.lose = false;
+        console.log("Play again!")
+        this.game.playAgain = true;
+        this.player.playAgain = null;
       }
       else {
-        this.route.navigateByUrl('/app');
+        this.player.win = false;
+        this.player.lose = false;
+        console.log("Game end")
+        this.game.playAgain = false;
+        this.player.playAgain = null;
       }
+      this.playerUpdate();
+
     }
   }
   //Game properties control & check

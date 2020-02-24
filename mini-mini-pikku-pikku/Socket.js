@@ -6,10 +6,10 @@ let hosting = new Host();
 let ticTacToeGame = new Game();
 
 let game = { players: [],
-  picked: [], justClicked: null};
+  picked: [], justClicked: null, playAgain:false};
   
   let idNum = 1;
-  
+  let wait = [];
 module.exports = class Socket{
     constructor(io){
       this.io = io;
@@ -47,6 +47,23 @@ onConnect(socket){
       })
     }
   });
+
+  socket.on("wait", function(player){
+    if(wait.length == 0){
+      wait.push(player);
+      io.emit("wait",wait);
+      socket.broadcast.emit('wait', wait);
+    }
+    else if(wait.length == 1){
+      wait.push(player);
+      io.emit("wait",wait);
+      socket.broadcast.emit('wait', wait);
+      console.log("After emit called?")
+      wait.length = 0;
+    }
+    else{
+    }
+  })
   //#endregion
 
   //#region "Chatting Section"

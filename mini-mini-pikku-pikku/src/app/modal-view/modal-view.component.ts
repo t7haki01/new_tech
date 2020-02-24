@@ -16,7 +16,7 @@ export class ModalViewComponent implements OnInit{
 
   private nameNotGiven: boolean;
   private Daenerys: string = "Daenerys of the House Targaryen, the First of Her Name, The Unburnt, Queen of the Andals, the Rhoynar and the First Men, Queen of Meereen, Khaleesi of the Great Grass Sea, Protector of the Realm, Lady Regent of the Seven Kingdoms, Breaker of Chains and Mother of Dragons";
-  
+  private players = [];
 
   constructor(
     public dialogRef: MatDialogRef<ModalViewComponent>,
@@ -29,6 +29,17 @@ export class ModalViewComponent implements OnInit{
     if (this.data.nickName != null) {
       this.multiService.setPlayer(this.data.nickName);
     }
+
+    this.multiService.
+      getWait()
+      .subscribe((data: any) => {
+        console.log("Subscribing");
+        this.players = data;
+        if (data.length == 2) {
+          this.multiService.loading = false;
+          this.router.navigateByUrl('/app/tictactoe');
+        }
+      });
   }
 
   onClose(): void {
@@ -42,21 +53,26 @@ export class ModalViewComponent implements OnInit{
 
   tictactoeClicked() {
     this.onClose();
-
+    this.multiService.wait(this.multiService.player);
     this.multiService.loading = true;
-    //this.router.navigateByUrl('/app/tictactoe');
+    if (this.players.length == 2) {
+      this.router.navigateByUrl('/app/tictactoe');
+    }
   }
   chatClicked() {
     this.onClose();
+    this.multiService.player.nickName = this.data.nickName;
     this.router.navigateByUrl('/app/chat');
   }
   ampClicked() {
     this.onClose();
+    this.multiService.player.nickName = this.data.nickName;
     window.location.href = window.location.origin + "/amp";
 
   }
   nonAmpClicked() {
     this.onClose();
+    this.multiService.player.nickName = this.data.nickName;
     window.location.href = window.location.origin + "/nonAmp";
   }
 }
