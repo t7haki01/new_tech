@@ -1,1 +1,19 @@
 @import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+
+body, html {
+  height: 100%;
+}
+.background-img {
+  background-image: url("https://media.giphy.com/media/p6fY2D2jDlX2M/giphy.gif");
+  background-repeat: no-repeat;
+  height: 100%;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main{
+  background-color: white;
+  opacity: 0.6;
+}

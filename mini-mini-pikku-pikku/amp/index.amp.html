@@ -1,22 +1,399 @@
-<!doctype html>
-<html amp lang="en">
+
+<!DOCTYPE HTML>
+<html ⚡ lang="en">
+<!--Step 4. In case of followings
+"The mandatory attribute '⚡' is missing in tag 'html ⚡ for top-level html'"
+"The mandatory tag 'html ⚡ for top-level html' is missing or incorrect."-->
+<!--Possible resolutions
+<html ⚡ lang="en">
+<html amp lang="en">-->
 <head>
-  <meta charset="utf-8">
-  <script async src="https://cdn.ampproject.org/v0.js"></script>
-  <title>Hello, AMPs</title>
-  <link rel="canonical" href="https://amp.dev/documentation/guides-and-tutorials/start/create/basic_markup/">
-  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-  <script type="application/ld+json">
-    {
-    "@context": "http://schema.org",
-    "@type": "NewsArticle",
-    "headline": "Open-source framework for publishing content",
-    "datePublished": "2015-10-07T12:02:41Z",
-    "image": [
-    "logo.jpg"
-    ]
+  <meta charset="utf-8" />
+  <!--Step 2. Start to resolve all the errors,
+  In case of "The mandatory tag 'meta charset=utf-8' is missing or incorrect."
+  Add meta charset "First" line of head tag-->
+  <!-- -->
+  <!-- -->
+  <!--Step 3. In case of "The mandatory tag 'link rel=canonical' is missing or incorrect."
+  Add link referencing the "canonical" version of document
+  insert below charset meta-->
+  <link rel="canonical" href="/index.amp.html">
+  <!---->
+  <!---->
+  <!--  Step 5. AMP requires definition of width and minimum-scale of viewport-->
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+
+  <title>Info, Non AMP</title>
+  <meta name="description" content="amp is applied" />
+  <meta name="keywords" content="amp, info" />
+
+
+  <!--  Warn, AMP meta tag content is specified to allow-->
+  <!--Step 6. "In case of The attribute 'href' in tag 'link rel=stylesheet for fonts' is set to the invalid value 'index.css'"
+  Direct reference - https://amp.dev/documentation/guides-and-tutorials/start/converting/resolving-errors/?format=websites
+  In AMP, to keep the load times of documents as fast as possible, you cannot include external stylesheets.
+  Instead, all stylesheet rules must be embedded in the AMP document using
+  <style amp-custom></style> tags, or as inline styles.-->
+  <style amp-custom>
+    html {
+      height: 100%;
     }
-  </script>
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font: normal .80em 'trebuchet ms', arial, sans-serif;
+      background: #FFF;
+      color: #555;
+    }
+
+    p {
+      padding: 0 0 20px 0;
+      line-height: 1.7em;
+    }
+
+    img {
+      border: 0;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #E7746F;
+      letter-spacing: 0em;
+      padding: 0 0 5px 0;
+    }
+
+    h1, h2, h3 {
+      font: normal 170% 'century gothic', arial;
+      margin: 0 0 15px 0;
+      padding: 15px 0 5px 0;
+    }
+
+    h2 {
+      font-size: 160%;
+      padding: 9px 0 5px 0;
+    }
+
+    h3 {
+      font-size: 140%;
+      padding: 5px 0 0 0;
+    }
+
+    h4, h6 {
+      color: #009FBC;
+      padding: 0 0 5px 0;
+      font: normal 110% arial;
+      text-transform: uppercase;
+    }
+
+    h5, h6 {
+      color: #888;
+      font: normal 95% arial;
+      letter-spacing: normal;
+      padding: 0 0 15px 0;
+    }
+
+    a, a:hover {
+      outline: none;
+      text-decoration: underline;
+      color: #009FBC;
+    }
+
+      a:hover {
+        text-decoration: none;
+      }
+
+    blockquote {
+      margin: 20px 0;
+      padding: 10px 20px 0 20px;
+      border: 1px solid #E5E5DB;
+      background: #FFF;
+    }
+
+    ul {
+      margin: 2px 0 22px 17px;
+    }
+
+      ul li {
+        list-style-type: circle;
+        margin: 0 0 6px 0;
+        padding: 0 0 4px 5px;
+        line-height: 1.5em;
+      }
+
+    ol {
+      margin: 8px 0 22px 20px;
+    }
+
+      ol li {
+        margin: 0 0 11px 0;
+      }
+
+    .left {
+      float: left;
+      width: auto;
+      margin-right: 10px;
+    }
+
+    .right {
+      float: right;
+      width: auto;
+      margin-left: 10px;
+    }
+
+    .center {
+      display: block;
+      text-align: center;
+      margin: 20px auto;
+    }
+
+    #main, #logo, #menubar, #site_content, #footer {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #header {
+      background: #1d1d1d url() repeat;
+      border-bottom: 2px solid #E7746F;
+      height: 177px;
+    }
+
+    #banner {
+      background: transparent url() no-repeat;
+      width: 870px;
+      height: 180px;
+      margin-bottom: 20px;
+      border: 5px solid #E7746F;
+    }
+
+    #logo {
+      width: 880px;
+      position: relative;
+      height: 140px;
+      background: transparent;
+    }
+
+      #logo #logo_text {
+        position: absolute;
+        top: 10px;
+        left: 0;
+      }
+
+      #logo h1, #logo h2 {
+        font: normal 300% 'century gothic', arial, sans-serif;
+        border-bottom: 0;
+        text-transform: none;
+        margin: 0 0 0 9px;
+      }
+
+    #logo_text h1, #logo_text h1 a, #logo_text h1 a:hover {
+      padding: 22px 0 0 0;
+      color: #FFF;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+      #logo_text h1 a .logo_colour {
+        color: #E7746F;
+      }
+
+    #logo_text a:hover .logo_colour {
+      color: #FFF;
+    }
+
+    #logo_text h2 {
+      font-size: 120%;
+      padding: 4px 0 0 0;
+      color: #FFF;
+    }
+
+    #menubar {
+      width: 100%;
+      height: 100%;
+    }
+
+    ul#menu {
+      /*float: right;*/
+      margin: 0;
+    }
+
+      ul#menu li {
+        float: left;
+        padding: 0 0 0 9px;
+        list-style: none;
+        margin: 1px 2px 0 0;
+        background: transparent;
+      }
+
+        ul#menu li a {
+          font: normal 100% 'trebuchet ms', sans-serif;
+          display: block;
+          float: left;
+          padding: 6px 35px 5px 28px;
+          text-align: center;
+          color: black;
+          background-color: aliceblue;
+          text-decoration: none;
+        }
+
+        ul#menu li.selected a {
+          height: 20px;
+          padding: 6px 35px 5px 28px;
+        }
+
+        ul#menu li.selected {
+          margin: 1px 2px 0 0;
+          background: #E7746F;
+        }
+
+          ul#menu li.selected a, ul#menu li.selected a:hover {
+            background: #E7746F;
+            color: #FFF;
+          }
+
+        ul#menu li a:hover {
+          color: #FFF;
+          background: #E7746F;
+        }
+
+    #site_content {
+      margin-right: 5em;
+      width: 30%;
+      float: right;
+      /*overflow: visible;*/
+      /*margin: 20px auto 0 auto;*/
+      padding: 0 0 10px 0;
+    }
+
+    #sidebar_container {
+      /*float: right;*/
+      width: 100%;
+    }
+
+    .sidebar_top {
+      width: 100%;
+      /*height: 14px;*/
+      background: transparent url() no-repeat;
+    }
+
+    .sidebar_base {
+      /*width: 222px;
+    height: 14px;*/
+      background: url() no-repeat;
+    }
+
+    .sidebar {
+      padding: 0;
+      margin: 0 0 16px 0;
+    }
+
+      .sidebar img {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        width: 30em;
+      }
+
+      .sidebar iframe {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        width: 30em;
+        height: 20em;
+      }
+
+    .sidebar_item {
+      padding: 0 15px;
+    }
+
+    .sidebar li a.selected {
+      color: #444;
+    }
+
+    .sidebar ul {
+      margin: 0;
+    }
+
+    #content {
+      text-align: left;
+      width: 60%;
+      /*padding: 0 0 0 5px;*/
+      float: left;
+      margin-left: 2em;
+    }
+
+      #content ul {
+        /*margin: 2px 0 22px 0px;*/
+      }
+
+        #content ul li, .sidebar ul li {
+          list-style-type: none;
+          background: url() no-repeat;
+          margin: 0 0 0 0;
+          padding: 0 0 4px 25px;
+          line-height: 1.5em;
+        }
+
+    .separator {
+      width: 100%;
+      height: 0;
+      border-top: 1px solid #D9D5CF;
+      border-bottom: 1px solid #FFF;
+      margin: 0 0 20px 0;
+    }
+
+    table {
+      margin: 10px 0 30px 0;
+    }
+
+      table tr th, table tr td {
+        background: #E7746F;
+        color: #FFF;
+        padding: 7px 4px;
+        text-align: left;
+      }
+
+      table tr td {
+        background: #E5E5DB;
+        color: #47433F;
+        border-top: 1px solid #FFF;
+      }
+
+
+    @media (max-width: 912px) {
+      #content {
+        text-align: left;
+        width: 40%;
+        /*padding: 0 0 0 5px;*/
+        float: left;
+        margin-left: 2em;
+      }
+
+      #site_content {
+        margin-right: 5em;
+        width: 20%;
+        float: right;
+        /*overflow: visible;*/
+        /*margin: 20px auto 0 auto;*/
+        padding: 0 0 10px 0;
+      }
+    }
+  </style>
+
+
+  <!--Step 7. In case of "The tag 'script' is disallowed except in specific forms"
+  In general, script in AMP are only allowed in case of asynchronous and for AMP components-->
+
+  <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
+
+  <!--Step 8. In case of followings
+  The mandatory tag 'noscript enclosure for boilerplate' is missing or incorrect.
+  The mandatory tag 'head > style : boilerplate' is missing or incorrect.
+  The mandatory tag 'noscript > style : boilerplate' is missing or incorrect.
+
+  Every AMP document requires defined AMP boilerplate code as below-->
   <style amp-boilerplate>
     body {
       -webkit-animation: -amp-start 8s steps(1,end) 0s 1 normal both;
@@ -74,20 +451,182 @@
         visibility: visible
       }
     }
-
-    body {
-      -webkit-animation: none;
-      -moz-animation: none;
-      -ms-animation: none;
-      animation: none
-    }
   </style>
+  <noscript>
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: none;
+        -moz-animation: none;
+        -ms-animation: none;
+        animation: none
+      }
+    </style>
+  </noscript>
+
+
+  <!--Step 1. Add AMP library "Bottom" of head tag-->
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
 </head>
+
 <body>
-  <h1>Welcome to the mobile web</h1>
-  <nav>
-    <a href="/app/tictactoe">Tic Tac Toe</a>
-    <a href="/app/">Main</a>
-  </nav>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <h1><a href="#">Mini Mini <span class="logo_colour">Pikku Pikku</span></a></h1>
+          <h2>Websocket, AMP</h2>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="content_header">
+      <div id="menubar">
+        <ul id="menu">
+          <li>
+            <!--
+                Step 11. Since custom JS is not allowed so there are many ways of handling navigation
+                In here, i decied to use AMP actions and events
+                Reference: https://amp.dev/documentation/guides-and-tutorials/learn/amp-actions-and-events/
+            -->
+            <a href="#" on="tap:AMP.navigateTo(url='http://localhost:8888/app/')">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="#" on="tap:AMP.navigateTo(url='http://localhost:8888/nonAmp/')">
+              Info (Non - AMP ver)
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div id="site_content">
+      <div id="sidebar_container">
+        <h3>Components to be compared</h3>
+        <p>What is AMP?<br /><a href="https://amp.dev/">Read more</a></p>
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Image 1</h3>
+            <h4>Accelerated Mobile Pages</h4>
+            <!--Step 9. Replace img with amp-img
+          AMP does not support default HTML counterparts to display media
+          So, AMP has own component designed to replace "img" tag with defining width and height-->
+            <amp-img src="https://media.giphy.com/media/13f5iwTRuiEjjW/giphy.gif" width="400" height="400" layout="responsive">
+            </amp-img>
+
+            <p>What is AMP?<br /><a href="https://amp.dev/">Read more</a></p>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Iframe, Video</h3>
+            <!--
+          Step 10. Replace iframe to amp component then must include required script,
+          Remember to defined width and height
+          -->
+            <amp-youtube data-videoid="tgbNymZ7vqY"
+                         width="400"
+                         height="400"
+                         layout="responsive"></amp-youtube>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Image 2</h3>
+            <amp-img src="https://media.giphy.com/media/ZCU3YxmmD8lh6savbB/giphy.gif" width="400" height="400" layout="responsive"></amp-img>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Image 3</h3>
+            <amp-img src="https://media.giphy.com/media/HttaUSk3PqWti/giphy.gif" width="400" height="400" layout="responsive"></amp-img>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Image 4</h3>
+            <amp-img src="https://media.giphy.com/media/l0NwOkgTYRi30mT4Y/giphy.gif" width="400" height="400" layout="responsive"></amp-img>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Image 5</h3>
+            <amp-img src="./img/img1.jpg" width="400" height="400" layout="responsive"></amp-img>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Image 6</h3>
+            <amp-img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="400" height="400" layout="responsive"></amp-img>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebar_top"></div>
+          <div class="sidebar_item">
+            <h3>Image 7</h3>
+            <amp-img src="https://effigis.com/wp-content/uploads/2015/02/Iunctus_SPOT5_5m_8bit_RGB_DRA_torngat_mountains_national_park_8bits_1.jpg"
+                     width="400" height="400" layout="responsive"></amp-img>
+          </div>
+          <div class="sidebar_base"></div>
+        </div>
+
+      </div>
+    </div>
+    <div id="content">
+      <h1>Mini Mini Pikku Pikku</h1>
+      <p>
+        This application is implemented for the ID00BQ10-3001 Working Life Skills DIN17SP, New Technologies.
+        <br />Application includes information pages (AMP & Non-AMP), TicTacToe and Chat.
+        <br />Excepteur sint occaecat cupidatat non proident, sunt in culpa qui.
+        <br />Excepteur sint occaecat cupidatat non proident, sunt in culpa qui.
+      </p>
+      <p>
+        <b>AMP</b> (originally an acronym for Accelerated Mobile Pages) is an online publishing format developed by Google
+        as a competitor to Facebook's Instant Articles.
+        It is similar to HTML and is optimised for mobile web browsing. Using special code,
+        AMP-HTML is intended to help webpages load rapidly when clicked in the Google search results pages,
+        though results have varied.
+        Pages are cached in Google's AMP cache, which, Google claims, allows them to be served even more quickly.
+        AMP was first announced on October 7, 2015, and,
+        after a technical preview, the service was launched to web users in February 2016.
+        The technology has received widespread criticism that it represents an attempt by Google to further exert dominance over the web.
+        <br /><i>Direct referenced, <a href="https://en.wikipedia.org/wiki/Accelerated_Mobile_Pages">https://en.wikipedia.org/wiki/Accelerated_Mobile_Pages</a></i>
+      </p>
+      <p>
+        <b>WebSocket</b> is a computer communications protocol, providing full-duplex communication channels over a single TCP connection.
+        The WebSocket protocol was standardized by the IETF as RFC 6455 in 2011,
+        and the WebSocket API in Web IDL is being standardized by the W3C.
+        <br /><i>Direct referenced, <a href="https://en.wikipedia.org/wiki/WebSocket">https://en.wikipedia.org/wiki/WebSocket</a></i>
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui.
+      </p>
+    </div>
+  </div>
 </body>
 </html>

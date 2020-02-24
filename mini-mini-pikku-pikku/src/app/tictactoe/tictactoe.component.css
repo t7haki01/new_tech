@@ -42,6 +42,8 @@ body {
 
   #chatDisplay li {
     padding: 5px 10px;
+    margin-left: 0;
+    margin-right: 0;
   }
 
     #chatDisplay li:nth-child(odd) {

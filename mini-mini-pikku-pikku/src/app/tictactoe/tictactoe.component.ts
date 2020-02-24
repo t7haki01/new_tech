@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../chat.service';
 import { TictactoeService } from '../tictactoe.service';
-import * as io from 'socket.io-client';
+import { MultiService } from '../multi.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tictactoe',
@@ -10,149 +11,243 @@ import * as io from 'socket.io-client';
 })
 export class TictactoeComponent implements OnInit {
   private message: string;
-  private messages: Array<string> = [];
+  private messages: Array<object> = [];
   private status = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+  private default = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 
   private game;
   private player;
   private isEnd: boolean = false;
-  private winner;
 
-  private socket: SocketIOClient.Socket;
 
   constructor(private chatService: ChatService,
-    private gameService: TictactoeService,)
-  {
-    this.socket = io('http://localhost:8888').connect();
-  }
+                      private gameService: TictactoeService,
+                      private multiService: MultiService,
+                      private route: Router,
+  ){}
 
   ngOnInit() {
-    
+
+    //Handling Chat
     this.chatService
       .getMessage()
       .subscribe((m: string) => {
-        this.messages.push(m);
+        this.messages.push({ name:this.player.nickName, msg:m });
       });
 
+    //Handing game states
     this.gameService
       .getStatus()
       .subscribe((status) => {
         this.status = status;
       });
 
-    this.game = new Array();
-    this.socket.emit('init');
-    this.socket.on('inited', (data: any) => {
-      this.socket.emit('afterInited', this.player);
-    });
+    //Init Player & Game
+    this.gameService.init();
 
-    this.socket.on('serverResponse', (data : any) => {
-      for (let i = 0; i < data.players.length; i++) {
-        if (data.players[i].socket == this.socket.id) {
-          this.player = data.players[i];
-        }
-      }
-      this.game = data;
-      this.socket.emit('gameUpdated', this.game);
-    });
-  }
-
-  cellClicked(cellNumber) {
-    if (this.isEnd) {
-      return;
-    }
-    let isMyTurn = false;
-    for (let j = 0; j < this.game.players.length; j++) {
-      if (this.game.players[j].socket == this.player.socket) {
-        console.log("Clicked");
-        if (this.player.turn) {
-          isMyTurn = true;
-        }
-      }
-      else if (this.game.justClicked.socket != this.player.socket) {
-        isMyTurn = true;
-      }
-    }
-    if (isMyTurn) {
-
-      for (let i = 0; i < this.status.length; i++) {
-        for (let j = 0; j < this.status[i].length; j++) {
-          if (this.status[i][j] == cellNumber) {
-            if (this.status[i][j] == 0 || this.status[i][j] == -1) {
-              console.log("Already clicked one");
-              return;
-            }
-
-            this.setClicked(this.player);
-            this.game.justClicked = this.player;
-            this.socket.emit('clicked', this.game);
-            this.socket.on('clicked_update', (data: any) => {
-              this.game = data;
-              this.socket.emit('gameUpdated', this.game);
-            });
-
-            this.status[i][j] = this.player.value;
-            this.gameService.updateStatus(this.status);
-
-            if (this.isDraw()) {
-              console.log("Game Draw!");
-              return;
-            }
-
-            let result = this.checkGameStatus();
-            if (result == this.player.value) {
-              this.isEnd = true;
-              this.winner = this.player;
-              console.log("Game End");
-            }
-          }
-        }
-      }
-
-
-    }
-    else {
-      this.socket.emit('getUpdate');
-      this.socket.on('pullUpdate', (data: any) => {
+    this.gameService
+      .getGame()
+      .subscribe((data: any) => {
         this.game = data;
-        this.socket.emit('gameUpdated', this.game);
-        this.socket.on('updateGame', (data: any) => {
-          this.game = data;
-        })
+        this.setPlayer(data);
       });
-    }
 
-    this.socket.emit('getUpdate');
-    this.socket.on('pullUpdate', (data: any) => {
-      this.game = data;
-      this.socket.emit('gameUpdated', this.game);
-      this.socket.on('updateGame', (data: any) => {
+    //Update game properties & states
+    this.gameService
+      .getUpdateGame()
+      .subscribe((data: any) => {
         this.game = data;
-      })
-    });
-
-
-
+        this.updatePlayer(data);
+        this.resultAction(data);
+      });
   }
 
-  setClicked(player) {
-    player.turn = false;
-    for (let i = 0; i < this.game.players.length; i++) {
-      if (this.game.players[i].socket == player.socket) {
-        this.game.players[i] = player;
-      }
-      else {
-        this.game.players[i].turn = true;
-      }
-    }
-  }
 
+  //Message control
   sendMessage(): void {
     let chatInput: HTMLInputElement = (<HTMLInputElement>document.getElementById('chatInput'));
     this.message = chatInput.value;
     chatInput.value = "";
     this.chatService.sendMessage(this.message);
     this.message = '';
+  }
+
+
+  //Player init & update
+  setPlayer(game): void {
+    for (let i = 0; i < game.players.length; i++) {
+      if (game.players[i].socket == this.gameService.socket.id) {
+        this.player = game.players[i];
+        //Init nickname
+        if (this.multiService.player) {
+          this.multiService.player.nickName = this.player.nickName;
+        }
+        else {
+          this.player.nickName = "Daenerys Targaryen";
+        }
+      }
+    }
+  }
+
+  updatePlayer(data: any) {
+    for (let i = 0; i < data.players.length; i++) {
+      if (data.players[i].socket == this.player.socket) {
+        this.player = data.players[i];
+      }
+    }
+
+  }
+
+
+
+  //Game flow control
+  cellClicked(cell) {
+    //'check is game end'
+    if (this.isEnd)
+      return;
+    //'check is my turn'
+    if (!this.isMyturn()) {
+      return;
+    }
+
+    //'check result of game'
+    let result = this.checkGameStatus()
+    //'if result 1 then nobody matches yet'
+    if (result == this.player.value) {
+      //"you win so some actiion"
+      this.resultAct(true);
+      return;
+    }
+    else if (result == 1) {
+      //continue
+      //case of draw
+    }
+    else {
+      //"you lose so some action"
+      this.resultAct(false);
+      return;
+    }
+
+    //"from here checked whole process"
+    //"TODO - change value/turn"
+
+    for (let i = 0; i < this.status.length; i++) {
+      for (let j = 0; j < this.status[i].length; j++) {
+        if (this.status[i][j] == cell) {
+          if (this.status[i][j] == 0 || this.status[i][j] == -1) {
+            console.log("Already clicked");
+            //'case - already clicked'
+            return;
+          }
+
+          this.status[i][j] = this.player.value;
+          this.gameService.updateStatus(this.status);
+          this.setClicked();
+
+          //'After Clicking check result'
+          let result = this.checkGameStatus();
+          if (result == this.player.value) {
+            this.isEnd = true;
+            this.setResult(true);
+            this.gameService.setUpdateGame(this.game);
+            this.resultAct(true);
+            console.log("Game End, you win!");
+          }
+          else if (result == 1) {
+            //"continue"
+          }
+          else {
+            this.isEnd = true;
+            this.setResult(false);
+            this.gameService.setUpdateGame(this.game);
+            this.resultAct(false);
+            console.log("Game End, you lose!");
+          }
+
+
+          if (this.isDraw()) {
+            console.log("Game Draw!");
+            //'Might some action for draw'
+            if (confirm("Draw!, Do you want to play again?"))
+              console.log("lets play one more!")
+            else
+              console.log("game end")
+
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  setClicked() {
+    for (let i = 0; i < this.game.players.length; i++) {
+      if (this.game.players[i].socket == this.player.socket) {
+        this.game.players[i].turn = false;
+        this.player.turn = false;
+      }
+      else {
+        this.game.players[i].turn = true;
+      }
+    }
+
+    this.gameService.setUpdateGame(this.game);
+  }
+
+  resultAct(isWin: boolean) {
+    if (isWin) {
+      if (confirm("You Win!, Play again?")) {
+        this.player.playAgain = true;
+      }
+      else {
+        this.player.playAgain = false;
+      }
+    }
+    else {
+      if (confirm("You Lose!, Play again?")) {
+        this.player.playAgain = true;
+      }
+      else {
+        this.player.playAgain = false;
+      }
+    }
+   this.playerUpdate();
+  }
+
+  resultAction(data: any) {
+    let playerA = data.players[0];
+    let playerB = data.players[1];
+    if (playerA.playAgain == null || playerB.playAgain == null) {
+      return;
+    }
+
+    if (playerA.playAgain && playerB.playAgain) {
+      playerA.win = false;
+      playerB.win = false;
+      playerA.lose = false;
+      playerB.lose = false;
+      this.status = this.default;
+      this.gameService.updateStatus(this.status);
+      this.playerUpdate();
+
+      if (playerA.playAgain) {
+        //Continue play again
+      }
+      else {
+        this.route.navigateByUrl('/app');
+      }
+    }
+  }
+  //Game properties control & check
+  isMyturn() {
+    let turn = false;
+    for (let i = 0; i < this.game.players.length; i++) {
+      if (this.game.players[i].socket == this.player.socket) {
+        if (this.game.players[i].turn)
+          turn = true;
+      }
+    }
+    return turn;
   }
 
   checkGameStatus(): number {
@@ -246,11 +341,36 @@ export class TictactoeComponent implements OnInit {
     }
 
     if (this.isEnd) {
-      if (!this.winner) {
+      if (!this.player.win) {
         isDraw = true;
       }
     }
 
     return isDraw;
   }
-}
+
+  setResult(isWin: boolean) {
+
+    for (let i = 0; i < this.game.players.length; i++) {
+      if (this.player.socket == this.game.players[i].socket) {
+        if (isWin) {
+          this.player.win = true;
+          this.game.players[i].win = true;
+        }
+        else {
+          this.player.lose = true;
+          this.game.players[i].lose = true;
+        }
+      }
+    }
+  }
+
+  playerUpdate() {
+    for (let i = 0; i < this.game.players.length; i++) {
+      if (this.game.players[i].socket == this.player.socket) {
+        this.game.players[i] = this.player;
+        this.gameService.setUpdateGame(this.game);
+      }
+    }
+  }
+}//End of Component

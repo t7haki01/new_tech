@@ -1,24 +1,38 @@
-<h1 *ngIf="!nameNotGiven" mat-dialog-title>Welcome, {{ data.nickName }}</h1>
-<h1 *ngIf="nameNotGiven" mat-dialog-title>Name is not given!</h1>
-<div mat-dialog-content>
-  <p *ngIf="nameNotGiven">So, we decided to call you as {{ data.nickName }}</p>
-  <p *ngIf="nameNotGiven">But still want to make sure. So are you sure we can call you as {{ data.nickName }}, <br />{{ Daenerys }}?</p>
-  <p *ngIf="!nameNotGiven">Choose what to do</p>
+<h1 *ngIf="multiService.player != null || data.nickName != null" mat-dialog-title>Welcome, {{ data.nickName }}</h1>
+<h1 *ngIf="multiService.player == null && data.nickName == null" mat-dialog-title>Name is not given!</h1>
+<div *ngIf="multiService.player == null && data.nickName == null" mat-dialog-content>
+  <p>So, we decided to call you as {{ data.nickName }}</p>
+  <p>But still want to make sure. So are you sure we can call you as {{ data.nickName }}, <br />{{ Daenerys }}?</p>
+</div>
+<div *ngIf="multiService.player != null || data.nickName != null">
+  <p>Choose what to do</p>
 
-  <div *ngIf="!nameNotGiven">
-    <mat-label>action A</mat-label>
+  <div>
+    <button mat-button cdkFocusInitial [disabled]="!multiService.btnReady" (click)="tictactoeClicked()">
+        Play Tic Tac Toe
+    </button>
   </div>
-
+  <br />
+  <div>
+    <button mat-button cdkFocusInitial (click)="chatClicked()" [disabled]="!multiService.btnReady">Chat</button>
+  </div>
+  <br />
+  <div (click)="ampClicked()">
+    <button mat-button cdkFocusInitial>Info, AMP Version</button>
+  </div>
+  <br />
+  <div (click)="nonAmpClicked()">
+    <button mat-button cdkFocusInitial>Info, Non AMP Version</button>
+  </div>
+  <br />
 </div>
 <div mat-dialog-actions>
   <div class="row text-center">
-    <div class="col">
-      <button *ngIf="nameNotGiven" mat-button (click)="callMeWhatEver()" cdkFocusInitial>Yes</button>
+    <div *ngIf="multiService.player == null && data.nickName == null" class="col">
+      <button mat-button (click)="callMeWhatEver()" cdkFocusInitial>Yes</button>
     </div>
     <div class="col">
       <button mat-button (click)="onClose()">Close</button>
     </div>
   </div>
-
-
 </div>

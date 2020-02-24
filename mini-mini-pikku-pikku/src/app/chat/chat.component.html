@@ -1,0 +1,30 @@
+
+<body>
+  <div class="row">
+    <div id="chat" class="col chat">
+      <h3>
+        <span class="badge badge-info">Chat</span>
+      </h3>
+      <ul id="chatRoom">
+        <li class="row table table-bordered" *ngFor="let message of messages">
+          <div class="col-1 bordered">
+            {{message.nickName}}
+          </div>
+          <div class="col">
+            {{message.msg}}
+          </div>
+
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row padding-adjust-input" id="inputBox">
+    <div class="col">
+      <input (keydown.enter)="sendMessage()" id="chatInput" autocomplete="off" />
+    </div>
+    <div class="col-1 padding-adjust-send-btn">
+      <button id="chatBtn" (click)="sendMessage()">Send</button>
+    </div>
+  </div>
+</body>
+

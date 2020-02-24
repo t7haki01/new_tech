@@ -1,12 +1,11 @@
+const Game = require('./Game.js');
+
+
 module.exports = class Host {
   constructor() {
-    this.game = {
-      isEnd: false,
-      winner: null,
-      loser: null,
-      status: '',
-      game:null
-    }
   }
-
+  games = [];
+  get games() {
+    return this.games;
+  }
 }

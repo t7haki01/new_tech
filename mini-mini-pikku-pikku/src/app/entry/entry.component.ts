@@ -9,6 +9,7 @@ import {
 import { interval } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalViewComponent } from '../modal-view/modal-view.component';
+import { MultiService } from '../multi.service';
 
 @Component({
   selector: 'app-entry',
@@ -64,9 +65,10 @@ export class EntryComponent implements AfterContentInit {
   private clicked: number = 0;
   private timer;
 
-  private nickName;
 
-  constructor(public modalView: MatDialog) {}
+  private nickName = null;
+
+  constructor(public modalView: MatDialog, private multiService: MultiService) {}
 
   ngAfterContentInit() {
     this.timer = interval(3000);
@@ -88,7 +90,7 @@ export class EntryComponent implements AfterContentInit {
   openModalView(): void {
     const dialogRef = this.modalView.open(ModalViewComponent, {
       width: '30em',
-      height: '30em',
+      height: '25em',
       data: { nickName: this.nickName }
     });
   }

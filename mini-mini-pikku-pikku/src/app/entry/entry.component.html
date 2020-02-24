@@ -1,22 +1,38 @@
+<div class="background-img">
+  <div class="main" *ngIf="!multiService.loading">
+    <div class="row">
+      <div [@greet]="state" class="col text-center">
+        <p>{{ greeting }}</p>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div *ngIf="multiService.player == null" class="col">
+        <mat-form-field>
+          <mat-label>How can we call you?</mat-label>
+          <input matInput [(ngModel)]="nickName">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col">
+        <button mat-raised-button (click)="openModalView()">Choose</button>
+      </div>
+    </div>
+  </div>
 
-<div>
-  <div class="row">
-    <div [@greet]="state" class="col text-center">
-      <p>{{ greeting }}</p>
+  <div *ngIf="multiService.loading">
+    <div class="row"></div>
+    <div class="row">
+      <div class="col">
+        Looking for players...
+      </div>
     </div>
-  </div>
-  <div class="row text-center">
-    <div class="col">
-      <mat-form-field>
-        <mat-label>How can we call you?</mat-label>
-        <input matInput [(ngModel)]="nickName">
-      </mat-form-field>
+    <div class="row">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
+    <div class="row"></div>
+    <div class="row"></div>
+
   </div>
-  <div class="row text-center">
-    <div class="col">
-      <button mat-raised-button (click)="openModalView()">Choose</button>
-    </div>
-  </div>
+
 </div>
-

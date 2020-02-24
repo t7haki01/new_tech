@@ -21,8 +21,13 @@
     </div>
     <div class="col">
       <ul id="chatDisplay">
-        <li *ngFor="let message of messages">
-          {{message}}
+        <li class="row table table-bordered" *ngFor="let message of messages">
+          <div  class="col bordered">
+            {{message.name}}
+          </div>
+          <div class="col">
+            {{message.msg}}
+          </div>
         </li>
       </ul>
     </div>

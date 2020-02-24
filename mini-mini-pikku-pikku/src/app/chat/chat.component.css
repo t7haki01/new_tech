@@ -1,0 +1,30 @@
+@import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+@import '../tictactoe/tictactoe.component.css';
+
+#chatRoom {
+  margin-top: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  /*list-style-type: none;
+  margin: 2em;
+  padding: 20em;
+  background-image: url("https://media.giphy.com/media/KEPQfFa3CtzCE/giphy.gif");
+  background-repeat: no-repeat;
+  border: solid .5em yellowgreen;
+  width: 90%;
+  height: 80%;*/
+}
+  #chatRoom li {
+    padding: 1em 1em;
+  }
+
+    #chatRoom li:nth-child(odd) {
+      background: #eee;
+    }
+
+.chat {
+  height: 45em;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+}

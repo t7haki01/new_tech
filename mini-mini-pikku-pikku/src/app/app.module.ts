@@ -8,8 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { EntryComponent } from './entry/entry.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { ModalViewComponent } from './modal-view/modal-view.component';
-import { MatFormFieldModule, MatDialogModule, MatInputModule } from '@angular/material'
+import { MatFormFieldModule, MatDialogModule, MatInputModule, MatProgressBarModule } from '@angular/material'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChatComponent } from './chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     EntryComponent,
     NotfoundComponent,
     ModalViewComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
-    MatInputModule
+    MatInputModule,
+    MatProgressBarModule,
   ],
   providers: [],
   entryComponents: [ModalViewComponent],
