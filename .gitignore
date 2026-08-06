@@ -19,3 +19,7 @@ deprecated
 
 .env
 ./mini-mini-pikku-pikku/.env
+
+# Local debug output (Chrome/npm crash logs)
+debug.log
+npm-debug.log*

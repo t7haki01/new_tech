@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable, interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import * as io from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { Router } from '@angular/router';
 
 @Injectable({

@@ -5,7 +5,24 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  # There is no manifest at the repository root -- each project below has its
+  # own package.json, so every directory has to be listed explicitly or
+  # Dependabot silently finds nothing to update.
+  - package-ecosystem: "npm"
+    directories:
+      - "/mini-mini-pikku-pikku"
+      - "/tic"
+      - "/tutorials/game2"
+      - "/tutorials/tuto-chat-socket-io"
+      - "/tutorials/tuto-game"
+      - "/tutorials/tutorial1"
+      - "/tutorials/tutorial2"
     schedule:
       interval: "monthly"
+    # These are archived learning projects; group updates so they arrive as a
+    # handful of pull requests rather than one per dependency.
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 5

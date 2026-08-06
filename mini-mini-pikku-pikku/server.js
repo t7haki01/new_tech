@@ -24,7 +24,11 @@ app.get('/nonAmp', (req, res) => {
 });
 
 let socketIO = require('socket.io');
-let io = socketIO(server);
+// socket.io v3+ no longer allows cross-origin connections by default, so the
+// origin the Angular client is served from has to be declared explicitly.
+let io = socketIO(server, {
+  cors: { origin: process.env.CLIENT_ORIGIN || true }
+});
 const Socket = require('./Socket.js');
 let socket = new Socket(io);
 
